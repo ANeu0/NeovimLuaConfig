@@ -18,11 +18,10 @@ lspconfig.gopls.setup {
     },
   },
 }
-
-
+local mason_package_path = vim.fn.stdpath("data")
 lspconfig.omnisharp.setup {
   -- Sauce: https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#omnisharp
-  cmd = { "dotnet", "C:/Users/Ansyn Neuhaus/AppData/Local/nvim-data/mason/packages/omnisharp/libexec/OmniSharp.dll" },
+  cmd = { "dotnet",  mason_package_path .. "/mason/packages/omnisharp/libexec/OmniSharp.dll" },
   on_attach = on_attach,
   capabilities = capabilities,
   -- Sauce to figure out: https://github.com/Hoffs/omnisharp-extended-lsp.nvim
