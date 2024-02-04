@@ -4,6 +4,9 @@ local plugins = {
     opts = {
       ensure_installed = {
         "gopls",
+        "pyright",
+        "omnisharp",
+        "lua-language-server"
       },
     },
   },

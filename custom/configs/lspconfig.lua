@@ -18,6 +18,8 @@ lspconfig.gopls.setup {
     },
   },
 }
+
+
 local mason_package_path = vim.fn.stdpath("data")
 lspconfig.omnisharp.setup {
   -- Sauce: https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#omnisharp
@@ -27,3 +29,8 @@ lspconfig.omnisharp.setup {
   -- Sauce to figure out: https://github.com/Hoffs/omnisharp-extended-lsp.nvim
 }
 
+lspconfig.pyright.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = {"python"},
+})
