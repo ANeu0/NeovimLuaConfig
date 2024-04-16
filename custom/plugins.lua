@@ -46,7 +46,7 @@ local plugins = {
   ]]--
   {
     -- Info for Rust crates
-    'saecki/crates/nvim',
+    'saecki/crates.nvim',
     ft ={ "rust", "toml" },
     config = function (_, opts)
       local crates = require('crates')
