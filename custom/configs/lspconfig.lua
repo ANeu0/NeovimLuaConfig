@@ -40,6 +40,9 @@ lspconfig.pyright.setup({
 })
 
 -- Rust
+-- commenting out as is handled by rust-tools
+-- found in plugins.lua
+--[[
 lspconfig.rust_analyzer.setup({
   on_attach = on_attach,
   capabilities = capabilities,
@@ -53,3 +56,4 @@ lspconfig.rust_analyzer.setup({
     },
   },
 })
+]]--
