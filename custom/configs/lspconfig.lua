@@ -1,15 +1,17 @@
 local on_attach = require("plugins.configs.lspconfig").on_attach
 local capabilities = require("plugins.configs.lspconfig").capabilities
-
 local lspconfig = require("lspconfig")
 local util = require "lspconfig/util"
 
+-- LSP CONFIGS --
+
+-- Go
 lspconfig.gopls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
-  cmd = {"gopls"},
+  cmd = { "gopls" },
   filetypes = { "go", "gomod", "gowork", "gotmpl" },
-  root_dir = util.root_pattern("go.work", "go.mod",".git"),
+  root_dir = util.root_pattern("go.work", "go.mod", ".git"),
   settings = {
     completeUnimported = true,
     usePlaceholders = true,
@@ -19,18 +21,35 @@ lspconfig.gopls.setup {
   },
 }
 
-
+-- C#
+-- this one is janky, need to specify .dll file path
 local mason_package_path = vim.fn.stdpath("data")
 lspconfig.omnisharp.setup {
   -- Sauce: https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#omnisharp
-  cmd = { "dotnet",  mason_package_path .. "/mason/packages/omnisharp/libexec/OmniSharp.dll" },
+  cmd = { "dotnet", mason_package_path .. "/mason/packages/omnisharp/libexec/OmniSharp.dll" },
   on_attach = on_attach,
   capabilities = capabilities,
   -- Sauce to figure out: https://github.com/Hoffs/omnisharp-extended-lsp.nvim
 }
 
+-- Python
 lspconfig.pyright.setup({
   on_attach = on_attach,
   capabilities = capabilities,
-  filetypes = {"python"},
+  filetypes = { "python" },
+})
+
+-- Rust
+lspconfig.rust_analyzer.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = { "rust" },
+  root_dir = util.root_pattern("Cargo.toml"),
+  settings = {
+    ['rust-analyzer'] = {
+      cargo = {
+        allFeatures = true,
+      },
+    },
+  },
 })
