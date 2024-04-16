@@ -1,5 +1,5 @@
 local on_attach = require("plugins.configs.lspconfig").on_attach
-local capabilities = require("lua.plugins.configs.lspconfig").capabilities
+local capabilities = require("plugins.configs.lspconfig").capabilities
 
 local options = {
   server = {
