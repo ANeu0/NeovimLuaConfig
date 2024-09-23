@@ -67,4 +67,9 @@ for _, lsp in ipairs(servers) do
   capabilities = capabilities,
   }
 end
-
+-- markdown
+lspconfig.marksman.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = { "markdown", "markdown.mdx" },
+})
