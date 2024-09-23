@@ -57,3 +57,14 @@ lspconfig.rust_analyzer.setup({
   },
 })
 ]]--
+
+-- JS lsps
+local servers = {"tsserver", "tailwindcss", "eslint", "cssls"}
+
+for _, lsp in ipairs(servers) do
+  lspconfig[lsp].setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  }
+end
+

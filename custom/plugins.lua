@@ -7,9 +7,20 @@ local plugins = {
         "pyright",
         "omnisharp",
         "rust-analyzer",
-        "lua-language-server"
+        "lua-language-server",
+        "typescript-language-server",
+        "tailwindcss-language-server",
+        "eslint-lsp",
+        "prettierd",
       },
     },
+  },
+  {
+    "nvimtools/none-ls.nvim",
+    event = "VeryLazy",
+    opts = function ()
+      return require "custom.configs.null-ls"
+    end,
   },
   {
     "neovim/nvim-lspconfig",
@@ -62,7 +73,37 @@ local plugins = {
       table.insert(M.sources, {name = "crates"})
       return M
     end,
-  }
-
+  },
+  -- Auto close HTML tags
+  {
+    "windwp/nvim-ts-autotag",
+    ft = {
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact",
+      "html",
+    },
+    config = function()
+      require("nvim-ts-autotag").setup()
+    end
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = function()
+      opts = require "plugins.configs.treesitter"
+      opts.ensure_installed = {
+        "lua",
+        "rust",
+        "go",
+        "c_sharp",
+        "javascript",
+        "typescript",
+        "tsx",
+        "css",
+      }
+      return opts
+    end
+  },
 }
 return plugins
