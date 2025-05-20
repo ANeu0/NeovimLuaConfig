@@ -23,13 +23,28 @@ lspconfig.gopls.setup {
 
 -- C#
 -- this one is janky, need to specify .dll file path
-local mason_package_path = vim.fn.stdpath("data")
+local mason_path_of_DLL = vim.fn.stdpath("data") .. "//mason//packages//omnisharp//OmniSharp.dll"
 lspconfig.omnisharp.setup {
-  -- Sauce: https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#omnisharp
-  cmd = { "dotnet", mason_package_path .. "/mason/packages/omnisharp/libexec/OmniSharp.dll" },
+  cmd = {
+    "dotnet",
+    mason_path_of_DLL
+  },
+  filetypes = { "cs", "vb", "razor" },
+  root_dir = util.root_pattern("*.sln", "*.csproj", "omnisharp.json", "function.json"),
   on_attach = on_attach,
   capabilities = capabilities,
-  -- Sauce to figure out: https://github.com/Hoffs/omnisharp-extended-lsp.nvim
+  settings = {
+    FormattingOptions = {
+      EnableEditorConfigSupport = true,
+    },
+    RoslynExtensionsOptions = {
+      EnableDecompilationSupport = true,
+    },
+    Sdk = {
+      IncludePrereleases = true,
+    },
+  },
+--   -- Sauce to figure out: https://github.com/Hoffs/omnisharp-extended-lsp.nvim
 }
 
 -- Python
