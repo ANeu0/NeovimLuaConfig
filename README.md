@@ -8,7 +8,7 @@ Most of this was shamelessly ripped from https://www.youtube.com/@dreamsofcode
 - Rust
 - Go
 - Python
-- Typescript
+- Tailwindypescript
 - Javascript
 - Tailwind CSS
 - HTML/CSS
@@ -17,8 +17,16 @@ Most of this was shamelessly ripped from https://www.youtube.com/@dreamsofcode
 ### Usefull links:
     https://github.com/neovim/nvim-lspconfig/tree/master/lua/lspconfig/server_configurations
 
-### OS placements:
-Windows: 
-- %userprofile%\AppData\Local\nvim\lua
-Linux:
-- ~/.config/nvim/
+
+### Set ups:
+#### Windows: 
+install NvChad:
+`git clone -b v2.0 https://github.com/NvChad/NvChad $HOME\AppData\Local\nvim`
+
+clone this repo into $HOME\AppData\Local\nvim\lua 
+#### Linux/Mac:
+
+install NvChad:
+`git clone -b v2.0 https://github.com/NvChad/NvChad ~/.config/nvim --depth 1`
+clone this repo into:
+ ~/.config/nvim/lua
