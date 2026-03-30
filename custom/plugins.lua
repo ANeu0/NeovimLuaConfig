@@ -6,19 +6,34 @@ local plugins = {
         "gopls",
         "pyright",
         "omnisharp",
+        "csharp-language-server",
         "rust-analyzer",
         "lua-language-server",
         "typescript-language-server",
         "tailwindcss-language-server",
         "eslint-lsp",
-        "prettierd",
+        "prettierd"
       },
     },
   },
   {
+    "seblyng/roslyn.nvim",
+    ---@module 'roslyn.config'
+    ---@type RoslynNvimConfig
+    opts = {
+      filewatching = "auto",
+      choose_target = nil,
+      ignore_target = nil,
+      broad_search = false,
+      lock_target = false,
+      silent = false,
+    },
+    ft = "cs",
+  },
+  {
     "nvimtools/none-ls.nvim",
     event = "VeryLazy",
-    opts = function ()
+    opts = function()
       return require "custom.configs.null-ls"
     end,
   },
@@ -54,12 +69,12 @@ local plugins = {
   {
     "mfussenegger/nvim-dap",
   }
-  ]]--
+  ]] --
   {
     -- Info for Rust crates
     'saecki/crates.nvim',
-    ft ={ "rust", "toml" },
-    config = function (_, opts)
+    ft = { "rust", "toml" },
+    config = function(_, opts)
       local crates = require('crates')
       crates.setup(opts)
       crates.show()
@@ -68,9 +83,9 @@ local plugins = {
   {
     -- Autocomplete for Rust Crates
     "hrsh7th/nvim-cmp",
-    opts = function ()
+    opts = function()
       local M = require "plugins.configs.cmp"
-      table.insert(M.sources, {name = "crates"})
+      table.insert(M.sources, { name = "crates" })
       return M
     end,
   },

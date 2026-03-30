@@ -3,6 +3,11 @@ local options = {
 
   PATH = "skip",
 
+  registries = {
+        "github:mason-org/mason-registry",
+        "github:Crashdummyy/mason-registry",
+  },
+
   ui = {
     icons = {
       package_pending = " ",

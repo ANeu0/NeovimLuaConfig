@@ -27,38 +27,65 @@ lspconfig.gopls.setup {
 --  -> OmniSharp handles razor and cshtml, but poorly or not at all.
 --    - Might try: https://github.com/tris203/rzls.nvim
 --  -> csharp_ls handles cs as OmniSharp is no longer offically supported
-local mason_path_of_DLL = vim.fn.stdpath("data") .. "//mason//packages//omnisharp//OmniSharp.dll"
-lspconfig.omnisharp.setup {
-  cmd = {
-    "dotnet",
-    mason_path_of_DLL
-  },
-  filetypes = { "razor", "cshtml" },
-  root_dir = util.root_pattern("*.sln", "*.csproj", "omnisharp.json", "function.json"),
+-- local mason_path_of_DLL = vim.fn.stdpath("data") .. "//mason//packages//omnisharp//OmniSharp.dll"
+-- local mason_path_of_DLL_mac = vim.fn.stdpath("data") .. "/mason/packages/omnisharp/libexec/OmniSharp.dll"
+-- lspconfig.omnisharp.setup {
+--   cmd = {
+--     "dotnet",
+--     mason_path_of_DLL_mac
+--   },
+--   filetypes = { "razor", "cshtml" },
+--   root_dir = util.root_pattern("*.sln", "*.csproj", "omnisharp.json", "function.json"),
+--   on_attach = on_attach,
+--   capabilities = capabilities,
+--   settings = {
+--     FormattingOptions = {
+--       EnableEditorConfigSupport = true,
+--     },
+--     RoslynExtensionsOptions = {
+--       EnableDecompilationSupport = true,
+--     },
+--     Sdk = {
+--       IncludePrereleases = true,
+--     },
+--   },
+--   --   -- Sauce to figure out: https://github.com/Hoffs/omnisharp-extended-lsp.nvim
+-- }
+--
+-- C# using csharp_ls (Roslyn-based LSP)
+-- needs `dotnet tool install --global csharp-ls`
+-- lspconfig.csharp_ls.setup {
+--   cmd = { "csharp-ls" },
+--   filetypes = { "cs", "vb" },
+--   root_dir = util.root_pattern("*.sln", "*.csproj", "omnisharp.json", "function.json"),
+--   on_attach = on_attach,
+--   capabilities = capabilities,
+-- }
+
+-- C# roslyn;
+local roslyn = require("roslyn");
+roslyn.setup({
   on_attach = on_attach,
   capabilities = capabilities,
   settings = {
-    FormattingOptions = {
-      EnableEditorConfigSupport = true,
+    ["csharp|inlay_hints"] = {
+      csharp_enable_inlay_hints_for_implicit_object_creation = true,
+      csharp_enable_inlay_hints_for_implicit_variable_types = true,
     },
-    RoslynExtensionsOptions = {
-      EnableDecompilationSupport = true,
+    ["csharp|code_lens"] = {
+      dotnet_enable_references_code_lens = true,
     },
-    Sdk = {
-      IncludePrereleases = true,
+    ["csharp|completion"] = {
+      dotnet_show_completion_items_from_unimported_namespaces = true,
+      dotnet_show_name_completion_suggestions = true
     },
+    ["csharp|formatting"] = {
+      dotnet_organize_imports_on_format = true
+    }
   },
-  --   -- Sauce to figure out: https://github.com/Hoffs/omnisharp-extended-lsp.nvim
-}
+})
 
--- C# using csharp_ls (Roslyn-based LSP)
-lspconfig.csharp_ls.setup {
-  cmd = { "csharp-ls" },
-  filetypes = { "cs", "vb" },
-  root_dir = util.root_pattern("*.sln", "*.csproj", "omnisharp.json", "function.json"),
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
+
 
 -- Python
 lspconfig.pyright.setup({
