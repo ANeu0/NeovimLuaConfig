@@ -1,69 +1,56 @@
 local on_attach = require("plugins.configs.lspconfig").on_attach
 local capabilities = require("plugins.configs.lspconfig").capabilities
-local lspconfig = require("lspconfig")
-local util = require "lspconfig/util"
 
 -- LSP CONFIGS --
 
 -- Go
-lspconfig.gopls.setup {
+vim.lsp.config("gopls", {
   on_attach = on_attach,
   capabilities = capabilities,
   cmd = { "gopls" },
   filetypes = { "go", "gomod", "gowork", "gotmpl" },
-  root_dir = util.root_pattern("go.work", "go.mod", ".git"),
+  root_markers = { "go.work", "go.mod", ".git" },
   settings = {
-    completeUnimported = true,
-    usePlaceholders = true,
-    analyses = {
-      unusedparams = true,
+    gopls = {
+      completeUnimported = true,
+      usePlaceholders = true,
+      analyses = {
+        unusedparams = true,
+      },
     },
   },
-}
+})
+vim.lsp.enable("gopls")
 
 -- C#
--- this one is janky, need to specify .dll file path
--- Both OmniSharp and Roslyn are used.
---  -> OmniSharp handles razor and cshtml, but poorly or not at all.
---    - Might try: https://github.com/tris203/rzls.nvim
---  -> csharp_ls handles cs as OmniSharp is no longer offically supported
 -- local mason_path_of_DLL = vim.fn.stdpath("data") .. "//mason//packages//omnisharp//OmniSharp.dll"
 -- local mason_path_of_DLL_mac = vim.fn.stdpath("data") .. "/mason/packages/omnisharp/libexec/OmniSharp.dll"
--- lspconfig.omnisharp.setup {
---   cmd = {
---     "dotnet",
---     mason_path_of_DLL_mac
---   },
+-- vim.lsp.config("omnisharp", {
+--   cmd = { "dotnet", mason_path_of_DLL_mac },
 --   filetypes = { "razor", "cshtml" },
---   root_dir = util.root_pattern("*.sln", "*.csproj", "omnisharp.json", "function.json"),
+--   root_markers = { "*.sln", "*.csproj", "omnisharp.json", "function.json" },
 --   on_attach = on_attach,
 --   capabilities = capabilities,
 --   settings = {
---     FormattingOptions = {
---       EnableEditorConfigSupport = true,
---     },
---     RoslynExtensionsOptions = {
---       EnableDecompilationSupport = true,
---     },
---     Sdk = {
---       IncludePrereleases = true,
---     },
+--     FormattingOptions = { EnableEditorConfigSupport = true },
+--     RoslynExtensionsOptions = { EnableDecompilationSupport = true },
+--     Sdk = { IncludePrereleases = true },
 --   },
---   --   -- Sauce to figure out: https://github.com/Hoffs/omnisharp-extended-lsp.nvim
--- }
---
--- C# using csharp_ls (Roslyn-based LSP)
--- needs `dotnet tool install --global csharp-ls`
--- lspconfig.csharp_ls.setup {
+-- })
+-- vim.lsp.enable("omnisharp")
+
+-- C# using csharp_ls
+-- vim.lsp.config("csharp_ls", {
 --   cmd = { "csharp-ls" },
 --   filetypes = { "cs", "vb" },
---   root_dir = util.root_pattern("*.sln", "*.csproj", "omnisharp.json", "function.json"),
+--   root_markers = { "*.sln", "*.csproj", "omnisharp.json", "function.json" },
 --   on_attach = on_attach,
 --   capabilities = capabilities,
--- }
+-- })
+-- vim.lsp.enable("csharp_ls")
 
--- C# roslyn;
-local roslyn = require("roslyn");
+-- C# roslyn
+local roslyn = require("roslyn")
 roslyn.setup({
   on_attach = on_attach,
   capabilities = capabilities,
@@ -77,55 +64,64 @@ roslyn.setup({
     },
     ["csharp|completion"] = {
       dotnet_show_completion_items_from_unimported_namespaces = true,
-      dotnet_show_name_completion_suggestions = true
+      dotnet_show_name_completion_suggestions = true,
     },
     ["csharp|formatting"] = {
-      dotnet_organize_imports_on_format = true
-    }
+      dotnet_organize_imports_on_format = true,
+    },
   },
 })
 
-
-
 -- Python
-lspconfig.pyright.setup({
+vim.lsp.config("pyright", {
   on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { "python" },
 })
+vim.lsp.enable("pyright")
 
--- JS lsps
-local servers = { "tsserver", "tailwindcss", "eslint", "cssls" }
-
+-- JS/TS LSPs
+local servers = { "ts_ls", "tailwindcss", "eslint", "cssls" }
 for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
+  vim.lsp.config(lsp, {
     on_attach = on_attach,
     capabilities = capabilities,
-  }
+  })
+  vim.lsp.enable(lsp)
 end
 
--- markdown
-lspconfig.marksman.setup({
+-- Markdown
+vim.lsp.config("marksman", {
   on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { "markdown", "markdown.mdx", "md" },
 })
+vim.lsp.enable("marksman")
 
--- lua
-lspconfig.lua_ls.setup({
+-- Lua
+vim.lsp.config("lua_ls", {
+  on_init = require("plugins.configs.lspconfig").on_init,  -- add this
   on_attach = on_attach,
   capabilities = capabilities,
   cmd = { "lua-language-server" },
   filetypes = { "lua" },
-  root_markers = { { '.luarc.json', '.luarc.jsonc' }, '.git' },
-  -- Specific settings to send to the server. The schema for this is
-  -- defined by the server. For example the schema for lua-language-server
-  -- can be found here https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json
+  root_markers = { { ".luarc.json", ".luarc.jsonc" }, ".git" },
   settings = {
     Lua = {
-      runtime = {
-        version = 'LuaJIT',
-      }
-    }
-  }
+      diagnostics = {
+        globals = { "vim" },
+      },
+      workspace = {
+        library = {
+          [vim.fn.expand "$VIMRUNTIME/lua"] = true,
+          [vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"] = true,
+          [vim.fn.stdpath "data" .. "/lazy/ui/nvchad_types"] = true,
+          [vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy"] = true,
+        },
+        maxPreload = 100000,
+        preloadFileSize = 10000,
+      },
+    },
+  },
 })
+vim.lsp.enable("lua_ls")
